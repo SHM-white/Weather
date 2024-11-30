@@ -1,3 +1,4 @@
+import getweatherUtil from '../viewmodel/getWeatherUtil'
 @Entry
 @Component
 struct Index {
@@ -6,7 +7,10 @@ struct Index {
   @State ToolItems : ToolbarItem[] = [this.ToolTmp, this.ToolTmp, this.ToolTmp]
 
   build() {
-    RelativeContainer() {
+    Column(){
+
+    }
+    /*RelativeContainer() {
 
       Navigation(){
 
@@ -17,5 +21,6 @@ struct Index {
     }
     .height('100%')
     .width('100%')
+    */
   }
 }

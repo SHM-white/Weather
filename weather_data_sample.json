@@ -1,0 +1,72 @@
+{
+    "status": "1",
+    "count": "1",
+    "info": "OK",
+    "infocode": "10000",
+    "forecasts": [
+        {
+            "city": "东城区",
+            "adcode": "110101",
+            "province": "北京",
+            "reporttime": "2024-11-30 13:32:53",
+            "casts": [
+                {
+                    "date": "2024-11-30",
+                    "week": "6",
+                    "dayweather": "晴",
+                    "nightweather": "晴",
+                    "daytemp": "15",
+                    "nighttemp": "0",
+                    "daywind": "南",
+                    "nightwind": "南",
+                    "daypower": "1-3",
+                    "nightpower": "1-3",
+                    "daytemp_float": "15.0",
+                    "nighttemp_float": "0.0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "week": "7",
+                    "dayweather": "多云",
+                    "nightweather": "多云",
+                    "daytemp": "12",
+                    "nighttemp": "-1",
+                    "daywind": "西北",
+                    "nightwind": "西北",
+                    "daypower": "1-3",
+                    "nightpower": "1-3",
+                    "daytemp_float": "12.0",
+                    "nighttemp_float": "-1.0"
+                },
+                {
+                    "date": "2024-12-02",
+                    "week": "1",
+                    "dayweather": "晴",
+                    "nightweather": "晴",
+                    "daytemp": "4",
+                    "nighttemp": "-3",
+                    "daywind": "北",
+                    "nightwind": "北",
+                    "daypower": "1-3",
+                    "nightpower": "1-3",
+                    "daytemp_float": "4.0",
+                    "nighttemp_float": "-3.0"
+                },
+                {
+                    "date": "2024-12-03",
+                    "week": "2",
+                    "dayweather": "晴",
+                    "nightweather": "多云",
+                    "daytemp": "5",
+                    "nighttemp": "-2",
+                    "daywind": "西南",
+                    "nightwind": "西南",
+                    "daypower": "1-3",
+                    "nightpower": "1-3",
+                    "daytemp_float": "5.0",
+                    "nighttemp_float": "-2.0"
+                }
+            ]
+        }
+    ]
+}
