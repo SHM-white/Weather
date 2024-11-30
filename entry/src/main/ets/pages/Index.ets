@@ -55,6 +55,8 @@ struct Index {
         
       }.barWidth(25)
       .barHeight(20)
+      .scrollable(true)
+      .barBackgroundBlurStyle(BlurStyle.Regular)
       .onChange((index:number)=>{
         this.currentCityIndex = index
       })
