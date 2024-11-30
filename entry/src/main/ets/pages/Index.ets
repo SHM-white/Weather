@@ -17,7 +17,7 @@ struct Index {
 
   @Builder tabBuild(index:number){
     Circle({width:10,height:10})
-      .fill(this.currentCityIndex === index ? Color.White : Color.Gray).opacity(0.4)
+      .fill(this.currentCityIndex === index ? Color.Black : Color.Gray).opacity(0.4)
   }
 
   aboutToAppear(){
@@ -49,11 +49,11 @@ struct Index {
       Tabs({barPosition:BarPosition.Start,controller:this.tabscontroller}){
         ForEach(this.cityWeatherList,(cityWeather:WeatherModel)=>{
           TabContent(){
-            CityView({weatherinfos : cityWeather.forecasts[0].weatherinfos})
+            CityView({weatherInfos : cityWeather.forecasts[0].casts})
           }.tabBar(this.tabBuild(this.cityWeatherList.findIndex(obj=>obj === cityWeather)))
         })
         
-      }.barWidth(20)
+      }.barWidth(25)
       .barHeight(20)
       .onChange((index:number)=>{
         this.currentCityIndex = index

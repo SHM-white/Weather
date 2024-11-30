@@ -1,28 +1,46 @@
 import {WeatherInfo} from "../viewmodel/WeatherInfo"
 @Component
-@Preview
 export struct CityView{
-  weatherinfos : Array<WeatherInfo> = []
+  weatherInfos : Array<WeatherInfo> = []
+  @State headColor : Color = Color.White
   build(){
     Column(){
-      ForEach(this.weatherinfos,(weatherInfo:WeatherInfo)=>{
-        if(this.weatherinfos[0] === weatherInfo){
+      ForEach(this.weatherInfos,(weatherInfo:WeatherInfo)=>{
+        if(this.weatherInfos[0] === weatherInfo){
           Row(){
-            Image($r('app.media.100')).width((260))
+            Column(){
+              Text(weatherInfo.dayweather).fontSize(45)
+                .fontWeight(FontWeight.Bold).margin(5)
+              Text(weatherInfo.nighttemp + "~" + weatherInfo.daytemp + "℃").fontSize(20)
+                .fontWeight(FontWeight.Bold).margin(3)
+              Text(weatherInfo.daywind+"风"+weatherInfo.daypower+"级").fontSize(20)
+                .fontWeight(FontWeight.Bold).margin(3)
+            }.align(Alignment.Start)
+            .margin({left:20})
             if(weatherInfo.dayweather === "晴"){
-              Image($r('app.media.100')).width((260))
+              Image($r('app.media.Sunny')).width((160))
             }
             if (weatherInfo.dayweather === "阴") {
-              Image($r('app.media.104')).width((260))
+              Image($r('app.media.Overcast')).width((160))
             }
             if (weatherInfo.dayweather === "多云") {
-              Image($r('app.media.101')).width((260))
+              Image($r('app.media.Cloudy')).width((160))
             }
             if (weatherInfo.dayweather.includes("雨")) {
-              Image($r('app.media.306')).width((260))
+              Image($r('app.media.Rain')).width((160))
             }
-          }.height("30%")
+          }.height("20%")
+          .width("90%")
+          .justifyContent(FlexAlign.SpaceBetween)
+          .margin(20)
+          .backgroundColor(weatherInfo.dayweather === "晴" ? 0x60d6ff : 0xcccccc)
+          .borderRadius(10)
+
         }
+        Column(){
+          ForEach()
+        }.width("90%")
+
       })
     }.width("100%")
     .height("100%")
