@@ -3,6 +3,21 @@
     "count": "1",
     "info": "OK",
     "infocode": "10000",
+    "lives": [
+        {
+            "province": "北京",
+            "city": "东城区",
+            "adcode": "110101",
+            "weather": "晴",
+            "temperature": "0",
+            "winddirection": "南",
+            "windpower": "≤3",
+            "humidity": "22",
+            "reporttime": "2024-12-02 18:37:02",
+            "temperature_float": "0.0",
+            "humidity_float": "22.0"
+        }
+    ],
     "forecasts": [
         {
             "city": "东城区",

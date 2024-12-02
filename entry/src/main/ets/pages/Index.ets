@@ -49,11 +49,9 @@ struct Index {
       Tabs({barPosition:BarPosition.Start,controller:this.tabscontroller}){
         ForEach(this.cityWeatherList,(cityWeather:WeatherModel)=>{
           TabContent(){
-            CityView({weatherInfos : cityWeather.forecasts[0].casts})
+            CityView({weatherInfos : cityWeather.forecasts[0].casts,liveWeatherInfo:cityWeather.lives[0]})
           }.tabBar(this.tabBuild(this.cityWeatherList.findIndex(obj=>obj === cityWeather)))
-
         })
-
       }.barWidth(this.cityNameList.length * 15)
       .barHeight(15)
       .scrollable(true)
