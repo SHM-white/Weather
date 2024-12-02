@@ -1,5 +1,5 @@
 import {WeatherInfo} from "../viewmodel/WeatherInfo"
-
+import {LiveWeatherInfo} from "../viewmodel/LiveWeatherInfo"
 interface LinearGradientInterface {
   angle?: number | string
   direction?: GradientDirection
@@ -10,6 +10,7 @@ interface LinearGradientInterface {
 @Component
 export struct CityView{
   weatherInfos : Array<WeatherInfo> = []
+  liveWeatherInfo : LiveWeatherInfo = new LiveWeatherInfo()
   @Builder weatherImg(weather:string,width:number = 30){
     Column(){
       if (weather === "晴") {
@@ -56,33 +57,36 @@ export struct CityView{
     Column(){
       ForEach(this.weatherInfos,(weatherInfo:WeatherInfo)=>{
         if(this.weatherInfos[0] === weatherInfo){
-          Column(){
-            Row() {
-              Column() {
-                Text(weatherInfo.dayweather).fontSize(45)
-                  .fontWeight(FontWeight.Bold).margin(5)
-              }.align(Alignment.Start)
-              .margin({ left: 20 })
-              this.weatherImg(weatherInfo.dayweather,160)
-            }.justifyContent(FlexAlign.SpaceBetween)
-
-            Column(){
-              Text(weatherInfo.nighttemp + "~" + weatherInfo.daytemp + "℃").fontSize(30)
-                .fontWeight(FontWeight.Bold).margin(10)
-              Text(weatherInfo.daywind + "风" + weatherInfo.daypower + "级").fontSize(30)
-                .fontWeight(FontWeight.Bold).margin(10)
-            }.layoutWeight(2)
-            .margin({top:20})
-          }
-          .width("90%")
-          .justifyContent(FlexAlign.SpaceBetween)
-          .margin(20)
-          .borderRadius(10)
-          .layoutWeight(2)
-          .linearGradient(this.viewBackground(weatherInfo.dayweather))
 
         }
       })
+      Column(){
+        Row() {
+          Column() {
+            Text(this.liveWeatherInfo.temperature.toString() + "℃").fontSize(50).fontWeight(FontWeight.Bold).margin(5).textAlign(TextAlign.Start)
+            Row(){
+              Text(this.liveWeatherInfo.weather).fontSize(15).margin(5).border({radius:20}).backgroundBlurStyle(BlurStyle.Regular).padding(5)
+              Text("湿度："+this.liveWeatherInfo.humidity.toString()+"%").fontSize(15).margin(5).border({radius:20}).backgroundBlurStyle(BlurStyle.Regular).padding(5)
+            }
+          }.align(Alignment.Start)
+          .margin({ left: 20 })
+          this.weatherImg(this.liveWeatherInfo.weather,160)
+        }.justifyContent(FlexAlign.SpaceBetween)
+
+        Column(){
+          Text(this.weatherInfos[0].nighttemp + "~" + this.weatherInfos[0].daytemp + "℃").fontSize(30)
+            .fontWeight(FontWeight.Bold).margin(10)
+          Text(this.weatherInfos[0].daywind + "风" + this.weatherInfos[0].daypower + "级").fontSize(30)
+            .fontWeight(FontWeight.Bold).margin(10)
+        }.layoutWeight(2)
+        .margin({top:20})
+      }
+      .width("90%")
+      .justifyContent(FlexAlign.SpaceBetween)
+      .margin(20)
+      .borderRadius(10)
+      .layoutWeight(2)
+      .linearGradient(this.viewBackground(this.liveWeatherInfo.weather))
 
       Column(){
         ForEach(this.weatherInfos,(weatherInfo:WeatherInfo)=>{
