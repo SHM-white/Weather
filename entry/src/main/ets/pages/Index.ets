@@ -8,7 +8,7 @@ struct Index {
   @State ToolTmp : ToolbarItem = {'value':'func','action':()=>{}}
   @State ToolItems : ToolbarItem[] = [this.ToolTmp, this.ToolTmp, this.ToolTmp]
 
-  @State cityCodeList : number[] = [110000,120000]
+  @State cityCodeList : number[] = [110000,120000,130000,140000,130637,370686,371602,540127,652700]
   @State cityNameList : string[] = []
   @State cityWeatherList : Array<WeatherModel> = []
   @State currentCityIndex : number = 0
@@ -16,8 +16,8 @@ struct Index {
   tabscontroller : TabsController = new TabsController()
 
   @Builder tabBuild(index:number){
-    Circle({width:10,height:10})
-      .fill(this.currentCityIndex === index ? Color.Black : Color.Gray).opacity(0.4)
+      Circle({ width: 10, height: 10 })
+        .fill(this.currentCityIndex === index ? Color.Blue : Color.Grey).opacity(0.4)
   }
 
   aboutToAppear(){
@@ -45,23 +45,25 @@ struct Index {
       }
       .justifyContent(FlexAlign.SpaceBetween)
       .width("95%")
-      .margin(10)
+      //.margin(10)
       Tabs({barPosition:BarPosition.Start,controller:this.tabscontroller}){
         ForEach(this.cityWeatherList,(cityWeather:WeatherModel)=>{
           TabContent(){
             CityView({weatherInfos : cityWeather.forecasts[0].casts})
           }.tabBar(this.tabBuild(this.cityWeatherList.findIndex(obj=>obj === cityWeather)))
+
         })
-        
-      }.barWidth(25)
-      .barHeight(20)
+
+      }.barWidth(this.cityNameList.length * 15)
+      .barHeight(15)
       .scrollable(true)
-      .barBackgroundBlurStyle(BlurStyle.Regular)
+      //.barBackgroundBlurStyle(BlurStyle.Regular)
       .onChange((index:number)=>{
         this.currentCityIndex = index
       })
     }.width("100%")
     .height("100%")
+    .backgroundColor(0xf6f6f6)
 
     /*RelativeContainer() {
 
