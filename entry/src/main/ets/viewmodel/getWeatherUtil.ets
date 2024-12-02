@@ -16,6 +16,21 @@ class getWeatherUtil{
       }).catch()
     })
   }
+  getLiveWeather(cityCode : number){
+    return new Promise<WeatherModel>((resolve,reject)=>{
+      let request = http.createHttp()
+      let url = `https://restapi.amap.com/v3/weather/weatherInfo?city=${cityCode}&key=45c5f8fa1fcdc1fe2cb119326f239cec&extensions=base`
+      let result = request.request(url)
+
+      result.then((res)=>{
+        if(res.responseCode === 200){
+          console.log(res.result.toString());
+          resolve(JSON.parse(res.result.toString()))
+        }
+      }).catch()
+    })
+  }
+
   async getWeathers(cityCodes : Array<number>){
     let promises:Array<Promise<WeatherModel>> = []
     let weatherModels :Array<WeatherModel> = []

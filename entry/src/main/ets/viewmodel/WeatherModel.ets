@@ -5,4 +5,5 @@ export class WeatherModel{
   count:number = 0
   infocode:number = 0
   forecasts:Array<Forecasts> = []
+
 }

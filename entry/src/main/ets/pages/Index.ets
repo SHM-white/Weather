@@ -8,7 +8,7 @@ struct Index {
   @State ToolTmp : ToolbarItem = {'value':'func','action':()=>{}}
   @State ToolItems : ToolbarItem[] = [this.ToolTmp, this.ToolTmp, this.ToolTmp]
 
-  @State cityCodeList : number[] = [110000,120000,130000,140000,130637,370686,371602,540127,652700]
+  @State cityCodeList : number[] = [110000,120000,130000,140000,130637,370686,371602,540127,652700,810006]
   @State cityNameList : string[] = []
   @State cityWeatherList : Array<WeatherModel> = []
   @State currentCityIndex : number = 0
@@ -17,7 +17,7 @@ struct Index {
 
   @Builder tabBuild(index:number){
       Circle({ width: 10, height: 10 })
-        .fill(this.currentCityIndex === index ? Color.Blue : Color.Grey).opacity(0.4)
+        .fill(this.currentCityIndex === index ? Color.Black : Color.Grey).opacity(0.4)
   }
 
   aboutToAppear(){
