@@ -17,17 +17,27 @@ struct CityManager {
     this.cityCodeList = param.codes || []
   }
   build() {
-    RelativeContainer() {
-      Text(this.message)
-        .id('CityManagerHelloWorld')
-        .fontSize(50)
-        .fontWeight(FontWeight.Bold)
-        .alignRules({
-          center: { anchor: '__container__', align: VerticalAlign.Center },
-          middle: { anchor: '__container__', align: HorizontalAlign.Center }
+    Column(){
+      Row(){
+        Button(){
+          SymbolGlyph($r('sys.symbol.arrow_left')).margin(5).fontSize(20)
+        }
+        .margin({ left:10, top:5})
+        .backgroundColor(Color.Transparent)
+        .onClick(()=>{
+          router.back({
+            url:"pages/Index",
+            params:{
+              names:this.cityNameList,
+              codes:this.cityCodeList
+            }
+          })
         })
-    }
-    .height('100%')
-    .width('100%')
+      }.width("100%")
+
+    }.width("100%")
+    .height("100%")
+    .backgroundColor(0xf6f6f6)
+
   }
 }

@@ -1,8 +1,13 @@
 import { CityView } from '../view/CityView';
 import getweatherUtil from '../viewmodel/getWeatherUtil'
 import {WeatherModel} from "../viewmodel/WeatherModel"
-import { router } from '@kit.ArkUI';
+import { router, SymbolGlyphModifier } from '@kit.ArkUI';
+import { settingsManager } from '../viewmodel/SettingsManager'
 
+interface cityInfos{
+  names:string[]
+  codes:number[]
+}
 @Entry
 @Component
 struct Index {
@@ -21,11 +26,30 @@ struct Index {
       Circle({ width: 10, height: 10 })
         .fill(this.currentCityIndex === index ? Color.Black : Color.Grey).opacity(0.4)
   }
-
+  @Builder MenuBuild(){
+    Menu(){
+      MenuItem({
+        symbolStartIcon: new SymbolGlyphModifier($r('sys.symbol.info_circle')),
+        content:"关于"
+      })
+    }
+    .backgroundBlurStyle(BlurStyle.Regular)
+    .backgroundColor(Color.Transparent)
+  }
+  onPageShow(): void {
+    let params = router.getParams() as cityInfos
+    if(params !== null){
+      this.cityCodeList = params.codes
+      this.cityNameList = params.names
+    }
+  }
   aboutToAppear(){
     this.initDate()
   }
   async initDate(){
+    await settingsManager.setCityCodes([110000,120000,130000,140000,130637,370686,371602,540127])
+    let r1 : number[] = await settingsManager.getCityCodes()
+    this.cityCodeList = r1
     let result : Array<WeatherModel> = await getweatherUtil.getWeathers(this.cityCodeList)
     for (let i = 0; i < result.length; i++) {
       let SingleWeather : WeatherModel = new WeatherModel()
@@ -33,6 +57,7 @@ struct Index {
       this.cityWeatherList.push(SingleWeather)
       this.cityNameList.push(result[i].forecasts[0].city)
     }
+    //let r : number[] = await settingsManager.getCityCodes()
   }
   build() {
     Column(){
@@ -44,6 +69,7 @@ struct Index {
           Button(){
             SymbolGlyph($r('sys.symbol.plus')).margin(5).fontSize(20)
           }
+            .backgroundColor(Color.Transparent)
             .onClick(()=>{
               router.pushUrl({
                 url:"pages/CityManager",
@@ -53,7 +79,12 @@ struct Index {
                 }
               })
             })
-          SymbolGlyph($r('sys.symbol.dot_grid_2x2')).margin(5).fontSize(20)
+          Button(){
+            SymbolGlyph($r('sys.symbol.dot_grid_2x2')).margin(5).fontSize(20)
+          }
+          .backgroundColor(Color.Transparent)
+          .bindMenu(this.MenuBuild())
+
         }
       }
       .justifyContent(FlexAlign.SpaceBetween)

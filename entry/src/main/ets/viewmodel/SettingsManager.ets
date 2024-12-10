@@ -42,13 +42,12 @@ class PreferenceUtils{
   }
 }
 
-export const preferenceUtils = new PreferenceUtils()
+export const preferenceUtils = new PreferenceUtils() as PreferenceUtils
 
 class SettingsManagerUtils{
   async getCityCodes():Promise<number[]>{
-
     return new Promise<number[]>((resolve)=>{
-      let result = preferenceUtils.get("CityCodes","")
+      let result = preferenceUtils.get("CityCodes","[]")
       result.then((res)=>{
         resolve(JSON.parse(res.toString()))
       })
@@ -57,6 +56,19 @@ class SettingsManagerUtils{
   async setCityCodes(codes:number[]){
     await preferenceUtils.set("CityCodes",JSON.stringify(codes))
   }
+
+  async getCityNames():Promise<string[]>{
+    return new Promise<string[]>((resolve)=>{
+      let result = preferenceUtils.get("CityNames","[]")
+      result.then((res)=>{
+        resolve(JSON.parse(res.toString()))
+      })
+    })
+  }
+  async setCityNames(names:string[]){
+    await preferenceUtils.set("CityNames",JSON.stringify(names))
+  }
+
 }
 
-export const settingsManager = new SettingsManagerUtils()
+export const settingsManager = new SettingsManagerUtils() as SettingsManagerUtils
