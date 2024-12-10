@@ -1,6 +1,8 @@
 import { CityView } from '../view/CityView';
 import getweatherUtil from '../viewmodel/getWeatherUtil'
 import {WeatherModel} from "../viewmodel/WeatherModel"
+import { router } from '@kit.ArkUI';
+
 @Entry
 @Component
 struct Index {
@@ -39,7 +41,18 @@ struct Index {
           .margin(10)
           .fontSize(20)
         Row(){
-          SymbolGlyph($r('sys.symbol.plus')).margin(5).fontSize(20).onClick(()=>{})
+          Button(){
+            SymbolGlyph($r('sys.symbol.plus')).margin(5).fontSize(20)
+          }
+            .onClick(()=>{
+              router.pushUrl({
+                url:"pages/CityManager",
+                params:{
+                  codes:this.cityCodeList,
+                  names:this.cityNameList
+                }
+              })
+            })
           SymbolGlyph($r('sys.symbol.dot_grid_2x2')).margin(5).fontSize(20)
         }
       }
