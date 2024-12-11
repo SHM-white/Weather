@@ -34,7 +34,18 @@ struct CityManager {
           })
         })
       }.width("100%")
-
+      ForEach(this.cityNameList,(name:string)=>{
+        Row(){
+          Text(name).fontSize(20).margin(10).textAlign(TextAlign.Start)
+          Button("删除").fontSize(17).margin(10)
+          Button(){
+            SymbolGlyph($r('sys.symbol.dot_3_viewfinder'))
+          }
+          .backgroundColor(Color.Transparent)
+        }
+        .width("90%")
+        .justifyContent(FlexAlign.SpaceBetween)
+      })
     }.width("100%")
     .height("100%")
     .backgroundColor(0xf6f6f6)
