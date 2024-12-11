@@ -1,4 +1,6 @@
 import { preferences } from '@kit.ArkData';
+import { WeatherModel } from './WeatherModel';
+import systemDateTime from '@ohos.systemDateTime';
 
 const name = "UserData"
 
@@ -69,6 +71,29 @@ class SettingsManagerUtils{
     await preferenceUtils.set("CityNames",JSON.stringify(names))
   }
 
+  async setWeatherCache(weathers:Array<WeatherModel>){
+    await preferenceUtils.set("Weather",JSON.stringify(weathers))
+    let date = new Date(systemDateTime.getTime())
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2); // 月份从0开始，需要加1并补0
+    const day = ("0" + date.getDate()).slice(-2); // 日期补0
+    const hours = ("0" + date.getHours()).slice(-2); // 小时补0
+    const minutes = ("0" + date.getMinutes()).slice(-2); // 分钟补0
+    const seconds = ("0" + date.getSeconds()).slice(-2); // 秒补0
+    const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    await preferenceUtils.set("UpdateTime",formattedTime)
+  }
+  async getLastUpdateTime(){
+    return await preferenceUtils.get("UpdateTime","")
+  }
+  async getWeatherCache():Promise<Array<WeatherModel>>{
+    return new Promise<Array<WeatherModel>>((resolve)=>{
+      let result = preferenceUtils.get("Weather","[]")
+      result.then((res)=>{
+        resolve(JSON.parse(res.toString()))
+      })
+    })
+  }
 }
 
 export const settingsManager = new SettingsManagerUtils() as SettingsManagerUtils

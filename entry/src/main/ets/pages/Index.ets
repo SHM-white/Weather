@@ -29,6 +29,10 @@ struct Index {
   @Builder MenuBuild(){
     Menu(){
       MenuItem({
+        symbolStartIcon: new SymbolGlyphModifier(($r('sys.symbol.arrow_clockwise'))),
+        content:"刷新"
+      })
+      MenuItem({
         symbolStartIcon: new SymbolGlyphModifier($r('sys.symbol.info_circle')),
         content:"关于"
       })
@@ -41,16 +45,22 @@ struct Index {
     if(params !== null){
       this.cityCodeList = (params as cityInfos)?.codes || []
       this.cityNameList = (params as cityInfos)?.names || []
+      this.initData()
     }
   }
   aboutToAppear(){
-    this.initDate()
+    this.initData(true)
   }
-  async initDate(){
-    await settingsManager.setCityCodes([110000,120000,130000,140000,130637,370686,371602,540127])
+  async readData(){
+    //await settingsManager.setCityCodes([110000,120000,130000,140000,130637,370686,371602,540127])
     let r1 : number[] = await settingsManager.getCityCodes()
     this.cityCodeList = r1
+  }
+  async initData(start?:boolean){
+    await start?this.readData():null
     let result : Array<WeatherModel> = await getweatherUtil.getWeathers(this.cityCodeList)
+    this.cityNameList = []
+    this.cityWeatherList = []
     for (let i = 0; i < result.length; i++) {
       let SingleWeather : WeatherModel = new WeatherModel()
       SingleWeather = result[i]
@@ -106,18 +116,5 @@ struct Index {
     }.width("100%")
     .height("100%")
     .backgroundColor(0xf6f6f6)
-
-    /*RelativeContainer() {
-
-      Navigation(){
-
-      }
-      .mode(NavigationMode.Auto)
-      .toolbarConfiguration(this.ToolItems)
-
-    }
-    .height('100%')
-    .width('100%')
-    */
   }
 }
