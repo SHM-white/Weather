@@ -31,7 +31,7 @@ class getWeatherUtil{
       }).catch()
     })
   }
-  getGeocode(address:string,city?:string){
+  private getGeocode(address:string,city?:string){
     return new Promise<GeocodeModel>((resolve,reject)=>{
       let request = http.createHttp()
       let url = `https://restapi.amap.com/v3/geocode/geo?address=${address}&key=45c5f8fa1fcdc1fe2cb119326f239cec${city === null?'':`&city=${city}`}`
@@ -69,7 +69,7 @@ class getWeatherUtil{
     })
     return weatherModels
   }
-  async getAdCode(address:string,city?:string){
+  async getGeoCodes(address:string,city?:string){
     let result = await this.getGeocode(address,city)
     return result.geocodes
   }

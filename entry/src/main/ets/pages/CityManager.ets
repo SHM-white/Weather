@@ -1,26 +1,39 @@
 import router from '@ohos.router';
-import text from '@ohos.graphics.text';
+import {settingsManager} from '../viewmodel/SettingsManager'
+import getweatherUtil from '../viewmodel/getWeatherUtil'
+import Geocode from '../viewmodel/Geocode'
 
 interface cityInfos{
   names:string[]
   codes:number[]
+}
+@Component
+struct GeocodeShower{
+  @State geocode:Geocode = {} as Geocode
+  build() {
+    Column(){
+      Text(this.geocode.city)
+      Text(this.geocode.adcode.toString())
+    }
+  }
 }
 @CustomDialog
 @Component
 struct InputCityNameDialog{
   @Link input: string
   @Link cityName: string
-  @Link adcode?: number
+  @Link adcode: number
+  @Link index: number
   controller?:CustomDialogController
   cancel: () => void = () => {
   }
-  confirm: () => void = () => {
+  confirm: (index:number) => void = () => {
   }
   build() {
     Column(){
-      Text('Change text').fontSize(20).margin({ top: 10, bottom: 10 })
+      Text('城市名称').fontSize(20).margin({ top: 10 }).width("90%")
       if (this.adcode !== 0){
-        Text(this.adcode?.toString()).fontSize(5).fontColor(Color.Grey)
+        Text(this.adcode.toString()).fontSize(10).fontColor(Color.Grey).width("90%").margin(10)
       }
       TextInput({ placeholder: '', text: this.cityName }).height(60).width('90%')
         .onChange((value: string) => {
@@ -39,7 +52,7 @@ struct InputCityNameDialog{
             if (this.controller != undefined) {
               this.cityName = this.input
               this.controller.close()
-              this.confirm()
+              this.confirm(this.index)
             }
           }).backgroundColor(0xffffff).fontColor(Color.Red)
       }
@@ -57,14 +70,16 @@ struct CityManager {
 
   @State input: string = ''
   @State cityName: string = ''
-  @State adcode:number = 0
+  @State adcode: number = 0
+  @State index: number = 0
   dialogController: CustomDialogController | null = new CustomDialogController({
     builder: InputCityNameDialog({
       cancel: ()=> { this.onCancel() },
-      confirm: ()=> { this.onAccept() },
-      input: this.input,
-      cityName: this.cityName,
-      adcode:this.adcode
+      confirm: (index:number)=> { this.onAccept(index) },
+      input: $input,
+      cityName: $cityName,
+      adcode: $adcode,
+      index: $index
     }),
     cancel: this.exitApp,
     autoCancel: true,
@@ -90,7 +105,20 @@ struct CityManager {
   onCancel() {
     console.info('Callback when the first button is clicked')
   }
-  onAccept() {
+  async onAccept(index:number) {
+    let result = await getweatherUtil.getGeoCodes(this.cityName)
+    if(result.length > 1){
+
+    }
+    if(index >= this.cityNameList.length){
+      this.cityNameList.push(result[0].city)
+      this.cityCodeList.push(result[0].adcode)
+    }
+    else {
+      this.cityNameList[index] = result[0].city
+      this.cityCodeList[index] = result[0].adcode
+    }
+    settingsManager.setCityCodes(this.cityCodeList)
     console.info('Callback when the second button is clicked')
   }
   exitApp() {
@@ -136,6 +164,7 @@ struct CityManager {
                 let index = this.cityNameList.findIndex(obj=>obj===name)
                 this.cityNameList.splice(index, 1)
                 this.cityCodeList.splice(index, 1)
+                settingsManager.setCityCodes(this.cityCodeList)
               })
               Button(){
                 SymbolGlyph($r('sys.symbol.gearshape')).fontSize(20)
@@ -143,6 +172,12 @@ struct CityManager {
               .backgroundColor(Color.Transparent)
               .margin(5)
               .onClick(()=>{
+                this.index = this.cityNameList.findIndex(obj=>obj===name)
+                this.cityName = this.cityNameList[this.index]
+                this.adcode = this.cityCodeList[this.index]
+                if(this.dialogController !== null){
+                  this.dialogController.open()
+                }
 
               })
             }
@@ -153,6 +188,9 @@ struct CityManager {
             SymbolGlyph($r('sys.symbol.plus'))
           }
           .onClick(()=>{
+            this.index = this.cityNameList.length
+            this.cityName = ""
+            this.adcode = 0
             if(this.dialogController !== null){
               this.dialogController.open()
             }

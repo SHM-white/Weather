@@ -15,7 +15,7 @@ struct Index {
   @State ToolTmp : ToolbarItem = {'value':'func','action':()=>{}}
   @State ToolItems : ToolbarItem[] = [this.ToolTmp, this.ToolTmp, this.ToolTmp]
 
-  @State cityCodeList : number[] = [110000,120000,130000,140000,130637,370686,371602,540127,652700,810006]
+  @State cityCodeList : number[] = []
   @State cityNameList : string[] = []
   @State cityWeatherList : Array<WeatherModel> = []
   @State currentCityIndex : number = 0
@@ -28,14 +28,17 @@ struct Index {
   }
   @Builder MenuBuild(){
     Menu(){
-      MenuItem({
-        symbolStartIcon: new SymbolGlyphModifier(($r('sys.symbol.arrow_clockwise'))),
-        content:"刷新"
-      })
+      // MenuItem({
+      //   symbolStartIcon: new SymbolGlyphModifier(($r('sys.symbol.arrow_clockwise'))),
+      //   content:"刷新"
+      // })
       MenuItem({
         symbolStartIcon: new SymbolGlyphModifier($r('sys.symbol.info_circle')),
         content:"关于"
       })
+        .onClick(()=>{
+
+        })
     }
     .backgroundBlurStyle(BlurStyle.Regular)
     .backgroundColor(Color.Transparent)
@@ -52,12 +55,12 @@ struct Index {
     this.initData(true)
   }
   async readData(){
-    //await settingsManager.setCityCodes([110000,120000,130000,140000,130637,370686,371602,540127])
+    //await settingsManager.setCityCodes([110000,120000,130000,140000,130637,370686,371602,540127,652700,810006])
     let r1 : number[] = await settingsManager.getCityCodes()
     this.cityCodeList = r1
   }
   async initData(start?:boolean){
-    await start?this.readData():null
+    await (start?this.readData():null)
     let result : Array<WeatherModel> = await getweatherUtil.getWeathers(this.cityCodeList)
     this.cityNameList = []
     this.cityWeatherList = []
