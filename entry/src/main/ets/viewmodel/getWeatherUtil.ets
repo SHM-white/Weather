@@ -1,4 +1,5 @@
 import { WeatherModel } from './WeatherModel'
+import GeocodeModel from './GeocodeModel'
 import http from  '@ohos.net.http'
 
 class getWeatherUtil{
@@ -20,6 +21,20 @@ class getWeatherUtil{
     return new Promise<WeatherModel>((resolve,reject)=>{
       let request = http.createHttp()
       let url = `https://restapi.amap.com/v3/weather/weatherInfo?city=${cityCode}&key=45c5f8fa1fcdc1fe2cb119326f239cec`
+      let result = request.request(url)
+
+      result.then((res)=>{
+        if(res.responseCode === 200){
+          console.log(res.result.toString());
+          resolve(JSON.parse(res.result.toString()))
+        }
+      }).catch()
+    })
+  }
+  getGeocode(address:string,city?:string){
+    return new Promise<GeocodeModel>((resolve,reject)=>{
+      let request = http.createHttp()
+      let url = `https://restapi.amap.com/v3/geocode/geo?address=${address}&key=45c5f8fa1fcdc1fe2cb119326f239cec${city === null?'':`&city=${city}`}`
       let result = request.request(url)
 
       result.then((res)=>{
@@ -53,6 +68,10 @@ class getWeatherUtil{
       }
     })
     return weatherModels
+  }
+  async getAdCode(address:string,city?:string){
+    let result = await this.getGeocode(address,city)
+    return result.geocodes
   }
 }
 

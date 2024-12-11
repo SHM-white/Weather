@@ -37,10 +37,10 @@ struct Index {
     .backgroundColor(Color.Transparent)
   }
   onPageShow(): void {
-    let params = router.getParams() as cityInfos
+    let params = router.getParams()
     if(params !== null){
-      this.cityCodeList = params.codes
-      this.cityNameList = params.names
+      this.cityCodeList = (params as cityInfos).codes
+      this.cityNameList = (params as cityInfos).names
     }
   }
   aboutToAppear(){
