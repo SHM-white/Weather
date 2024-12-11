@@ -39,8 +39,8 @@ struct Index {
   onPageShow(): void {
     let params = router.getParams()
     if(params !== null){
-      this.cityCodeList = (params as cityInfos).codes
-      this.cityNameList = (params as cityInfos).names
+      this.cityCodeList = (params as cityInfos)?.codes || []
+      this.cityNameList = (params as cityInfos)?.names || []
     }
   }
   aboutToAppear(){
@@ -76,7 +76,7 @@ struct Index {
                 params:{
                   codes:this.cityCodeList,
                   names:this.cityNameList
-                }
+                } as cityInfos
               })
             })
           Button(){

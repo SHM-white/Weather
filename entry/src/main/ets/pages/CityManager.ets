@@ -30,22 +30,47 @@ struct CityManager {
             params:{
               names:this.cityNameList,
               codes:this.cityCodeList
-            }
+            } as cityInfos
           })
         })
-      }.width("100%")
-      ForEach(this.cityNameList,(name:string)=>{
-        Row(){
-          Text(name).fontSize(20).margin(10).textAlign(TextAlign.Start)
-          Button("删除").fontSize(17).margin(10)
+      }.width("95%")
+      .margin({bottom:10})
+
+      Scroll(){
+        Column(){
+          ForEach(this.cityNameList,(name:string)=>{
+            Row(){
+              Text(name).fontSize(20).margin(10).textAlign(TextAlign.Start)
+                .layoutWeight(1)
+              Button(){
+                SymbolGlyph($r('sys.symbol.trash')).fontSize(20)
+              }
+              .backgroundColor(Color.Transparent)
+              .margin(5)
+              Button(){
+                SymbolGlyph($r('sys.symbol.gearshape')).fontSize(20)
+              }
+              .backgroundColor(Color.Transparent)
+              .margin(5)
+            }
+            .width("90%")
+            .justifyContent(FlexAlign.SpaceEvenly)
+          })
           Button(){
-            SymbolGlyph($r('sys.symbol.dot_3_viewfinder'))
+            SymbolGlyph($r('sys.symbol.plus'))
           }
+          .width("90%")
+          .height(40)
           .backgroundColor(Color.Transparent)
+          .border({style:BorderStyle.Dashed,color:Color.Grey,radius:5,width:2})
+          .margin(5)
         }
         .width("90%")
-        .justifyContent(FlexAlign.SpaceBetween)
-      })
+      }.scrollable(ScrollDirection.Vertical)
+      .width("100%")
+      .height("93%")
+      .align(Alignment.Top)
+
     }.width("100%")
     .height("100%")
     .backgroundColor(0xf6f6f6)
