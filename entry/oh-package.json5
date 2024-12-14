@@ -1,10 +1,10 @@
 {
   "name": "entry",
   "version": "1.0.0",
-  "description": "Please describe the basic information.",
+  "description": "Weather",
   "main": "",
-  "author": "",
+  "author": "SHM_white",
   "license": "",
-  "dependencies": {}
+  "dependencies": {},
 }
 
