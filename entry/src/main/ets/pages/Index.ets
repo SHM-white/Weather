@@ -42,7 +42,7 @@ struct Index {
       })
         .onClick(()=>{
           promptAction.showToast({
-            message:"SHM_white Weather v0.1 NUAA"
+            message:"SHM_white Weather v1.0 NUAA"
           })
 
         })

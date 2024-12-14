@@ -34,7 +34,7 @@ struct InputCityNameDialog{
     Column(){
       Text('城市名称').fontSize(20).margin(10).width("90%")
       if (this.adcode !== 0){
-        Text(this.adcode.toString()).fontSize(10).fontColor(Color.Grey).width("90%")
+        Text(`adcode:${this.adcode.toString()}`).fontSize(10).fontColor(Color.Grey).width("90%")
       }
       TextInput({ placeholder: '', text: this.cityName }).height(45).width('90%').margin(10)
         .onChange((value: string) => {
@@ -47,8 +47,8 @@ struct InputCityNameDialog{
               this.controller.close()
               this.cancel()
             }
-          }).backgroundColor(Color.Transparent).fontColor(Color.Black)
-          .margin(10)
+          }).backgroundColor(0xf6f6f6).fontColor(Color.Black)
+          .margin({ left:10,right:10 }).layoutWeight(1)
         Button('确定')
           .onClick(() => {
             if (this.controller != undefined) {
@@ -56,9 +56,9 @@ struct InputCityNameDialog{
               this.controller.close()
               this.confirm(this.index)
             }
-          }).backgroundColor(Color.Transparent).fontColor(Color.Red)
-          .margin(10)
-      }
+          }).backgroundColor(0xf6f6f6).fontColor(Color.Blue)
+          .margin({ left:10,right:10 }).layoutWeight(1)
+      }.margin(10)
     }
 
   }
@@ -100,7 +100,7 @@ struct CityManager {
     offset: { dx: 0, dy: -20 },
     gridCount: 4,
     customStyle: false,
-    cornerRadius: 10,
+    cornerRadius: 20,
   })
   aboutToDisappear() {
     this.dialogController = null // 将dialogController置空
@@ -110,8 +110,11 @@ struct CityManager {
   }
   async onAccept(index:number) {
     let result = await getweatherUtil.getGeoCodes(this.cityName)
-    if(result.length > 1){
-
+    if(result[0].adcode === 100000 || result[0].adcode.toString() === "100000"){
+      promptAction.showToast(({
+        message:"请输入具体地点"
+      }))
+      return
     }
     if(this.cityCodeList.findIndex(obj=>obj===result[0].adcode) !== -1){
       promptAction.showToast({
@@ -174,15 +177,39 @@ struct CityManager {
               Text(this.cityNameList[this.cityCodeList.findIndex(obj=>obj===code)]).fontSize(20).margin(10).textAlign(TextAlign.Start)
                 .layoutWeight(1)
               Button(){
-                SymbolGlyph($r('sys.symbol.trash')).fontSize(20)
+                SymbolGlyph($r('sys.symbol.trash')).fontSize(20).fontColor([Color.Red])
               }
               .backgroundColor(Color.Transparent)
               .margin(5)
               .onClick(()=>{
                 let index = this.cityCodeList.findIndex(obj=>obj===code)
-                this.cityNameList.splice(index, 1)
-                this.cityCodeList.splice(index, 1)
-                settingsManager.setCityCodes(this.cityCodeList)
+                promptAction.showDialog({
+                  title:"你确定要删除吗？",
+                  message:`${this.cityNameList[index]} ${this.cityCodeList[index]}`,
+                  isModal:true,
+                  showInSubWindow:true,
+                  alignment:DialogAlignment.Bottom,
+                  buttons:[
+                    {
+                      text:"取消",
+                      color:Color.Black.toString()
+                    },
+                    {
+                      text:"确定",
+                      color:Color.Red.toString()
+                    }
+                  ]
+                },(err,data)=>{
+                  if(err){
+                    console.warn(err.message)
+                    return
+                  }
+                  if(data.index == 1){
+                    this.cityNameList.splice(index, 1)
+                    this.cityCodeList.splice(index, 1)
+                    settingsManager.setCityCodes(this.cityCodeList)
+                  }
+                })
               })
               Button(){
                 SymbolGlyph($r('sys.symbol.gearshape')).fontSize(20)
@@ -196,11 +223,13 @@ struct CityManager {
                 if(this.dialogController !== null){
                   this.dialogController.open()
                 }
-
               })
             }
             .width("90%")
             .justifyContent(FlexAlign.SpaceEvenly)
+            .borderRadius(30).backgroundColor(Color.White)
+            .margin(5)
+            .padding({left:5,right:7})
           })
           Button(){
             SymbolGlyph($r('sys.symbol.plus'))
