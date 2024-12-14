@@ -2,6 +2,7 @@ import router from '@ohos.router';
 import {settingsManager} from '../viewmodel/SettingsManager'
 import getweatherUtil from '../viewmodel/getWeatherUtil'
 import Geocode from '../viewmodel/Geocode'
+import { promptAction } from '@kit.ArkUI';
 
 interface cityInfos{
   names:string[]
@@ -31,11 +32,11 @@ struct InputCityNameDialog{
   }
   build() {
     Column(){
-      Text('城市名称').fontSize(20).margin({ top: 10 }).width("90%")
+      Text('城市名称').fontSize(20).margin(10).width("90%")
       if (this.adcode !== 0){
-        Text(this.adcode.toString()).fontSize(10).fontColor(Color.Grey).width("90%").margin(10)
+        Text(this.adcode.toString()).fontSize(10).fontColor(Color.Grey).width("90%")
       }
-      TextInput({ placeholder: '', text: this.cityName }).height(60).width('90%')
+      TextInput({ placeholder: '', text: this.cityName }).height(45).width('90%').margin(10)
         .onChange((value: string) => {
           this.input = value
         })
@@ -46,7 +47,8 @@ struct InputCityNameDialog{
               this.controller.close()
               this.cancel()
             }
-          }).backgroundColor(0xffffff).fontColor(Color.Black)
+          }).backgroundColor(Color.Transparent).fontColor(Color.Black)
+          .margin(10)
         Button('确定')
           .onClick(() => {
             if (this.controller != undefined) {
@@ -54,7 +56,8 @@ struct InputCityNameDialog{
               this.controller.close()
               this.confirm(this.index)
             }
-          }).backgroundColor(0xffffff).fontColor(Color.Red)
+          }).backgroundColor(Color.Transparent).fontColor(Color.Red)
+          .margin(10)
       }
     }
 
@@ -110,19 +113,34 @@ struct CityManager {
     if(result.length > 1){
 
     }
+    if(this.cityCodeList.findIndex(obj=>obj===result[0].adcode) !== -1){
+      promptAction.showToast({
+        message:`重复添加：${result[0].city},${result[0].adcode}`
+      })
+      return
+    }
     if(index >= this.cityNameList.length){
       this.cityNameList.push(result[0].city)
       this.cityCodeList.push(result[0].adcode)
+      try {
+        promptAction.showToast({
+          message:`添加：${result[0].province}${result[0].city}${result[0].formatted_address},${result[0].adcode}`
+        })
+      } catch (e) {
+
+      }
     }
     else {
       this.cityNameList[index] = result[0].city
       this.cityCodeList[index] = result[0].adcode
+      promptAction.showToast({
+        message:`修改为：${result[0].city},${result[0].adcode}`
+      })
     }
     settingsManager.setCityCodes(this.cityCodeList)
-    console.info('Callback when the second button is clicked')
   }
   exitApp() {
-    console.info('Click the callback in the blank area')
+
   }
   onPageShow(): void {
     let param = (router.getParams()|| {}) as cityInfos
@@ -151,9 +169,9 @@ struct CityManager {
 
       Scroll(){
         Column(){
-          ForEach(this.cityNameList,(name:string)=>{
+          ForEach(this.cityCodeList,(code:number)=>{
             Row(){
-              Text(name).fontSize(20).margin(10).textAlign(TextAlign.Start)
+              Text(this.cityNameList[this.cityCodeList.findIndex(obj=>obj===code)]).fontSize(20).margin(10).textAlign(TextAlign.Start)
                 .layoutWeight(1)
               Button(){
                 SymbolGlyph($r('sys.symbol.trash')).fontSize(20)
@@ -161,7 +179,7 @@ struct CityManager {
               .backgroundColor(Color.Transparent)
               .margin(5)
               .onClick(()=>{
-                let index = this.cityNameList.findIndex(obj=>obj===name)
+                let index = this.cityCodeList.findIndex(obj=>obj===code)
                 this.cityNameList.splice(index, 1)
                 this.cityCodeList.splice(index, 1)
                 settingsManager.setCityCodes(this.cityCodeList)
@@ -172,7 +190,7 @@ struct CityManager {
               .backgroundColor(Color.Transparent)
               .margin(5)
               .onClick(()=>{
-                this.index = this.cityNameList.findIndex(obj=>obj===name)
+                this.index = this.cityCodeList.findIndex(obj=>obj===code)
                 this.cityName = this.cityNameList[this.index]
                 this.adcode = this.cityCodeList[this.index]
                 if(this.dialogController !== null){

@@ -84,7 +84,7 @@ class SettingsManagerUtils{
     await preferenceUtils.set("UpdateTime",formattedTime)
   }
   async getLastUpdateTime(){
-    return await preferenceUtils.get("UpdateTime","")
+    return await preferenceUtils.get("UpdateTime","") as string
   }
   async getWeatherCache():Promise<Array<WeatherModel>>{
     return new Promise<Array<WeatherModel>>((resolve)=>{

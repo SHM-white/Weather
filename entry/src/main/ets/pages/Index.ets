@@ -1,7 +1,7 @@
 import { CityView } from '../view/CityView';
 import getweatherUtil from '../viewmodel/getWeatherUtil'
 import {WeatherModel} from "../viewmodel/WeatherModel"
-import { router, SymbolGlyphModifier } from '@kit.ArkUI';
+import { promptAction, router, SymbolGlyphModifier } from '@kit.ArkUI';
 import { settingsManager } from '../viewmodel/SettingsManager'
 
 interface cityInfos{
@@ -19,6 +19,7 @@ struct Index {
   @State cityNameList : string[] = []
   @State cityWeatherList : Array<WeatherModel> = []
   @State currentCityIndex : number = 0
+  @State lastUpdateTime: string = ""
 
   tabscontroller : TabsController = new TabsController()
 
@@ -28,15 +29,21 @@ struct Index {
   }
   @Builder MenuBuild(){
     Menu(){
-      // MenuItem({
-      //   symbolStartIcon: new SymbolGlyphModifier(($r('sys.symbol.arrow_clockwise'))),
-      //   content:"刷新"
-      // })
+      MenuItem({
+        symbolStartIcon: new SymbolGlyphModifier(($r('sys.symbol.arrow_clockwise'))),
+        content:"刷新"
+      })
+        .onClick(()=>{
+          this.initData()
+        })
       MenuItem({
         symbolStartIcon: new SymbolGlyphModifier($r('sys.symbol.info_circle')),
         content:"关于"
       })
         .onClick(()=>{
+          promptAction.showToast({
+            message:"SHM_white Weather v0.1 NUAA"
+          })
 
         })
     }
@@ -57,11 +64,16 @@ struct Index {
   async readData(){
     //await settingsManager.setCityCodes([110000,120000,130000,140000,130637,370686,371602,540127,652700,810006])
     let r1 : number[] = await settingsManager.getCityCodes()
+    let r2 = await settingsManager.getWeatherCache()
+    this.cityWeatherList = r2
     this.cityCodeList = r1
   }
   async initData(start?:boolean){
+    let r1 = await settingsManager.getLastUpdateTime()
+    this.lastUpdateTime = r1
     await (start?this.readData():null)
     let result : Array<WeatherModel> = await getweatherUtil.getWeathers(this.cityCodeList)
+    settingsManager.setWeatherCache(result)
     this.cityNameList = []
     this.cityWeatherList = []
     for (let i = 0; i < result.length; i++) {
@@ -75,9 +87,12 @@ struct Index {
   build() {
     Column(){
       Row(){
-        Text((this.cityNameList.length === 0)?"Example":this.cityNameList[this.currentCityIndex])
-          .margin(10)
-          .fontSize(20)
+        Row(){
+          Text((this.cityNameList.length === 0) ? "Example" : this.cityNameList[this.currentCityIndex])
+            .margin(10)
+            .fontSize(20)
+          Text(`上次更新：${this.lastUpdateTime.substring(5, 16)}`).fontSize(13).margin({ top: 5 }).fontColor(Color.Grey)
+        }
         Row(){
           Button(){
             SymbolGlyph($r('sys.symbol.plus')).margin(5).fontSize(20)
